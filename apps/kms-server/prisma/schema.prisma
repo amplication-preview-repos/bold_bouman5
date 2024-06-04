@@ -1,0 +1,50 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Policy {
+  access      Access?  @relation(fields: [accessId], references: [id])
+  accessId    String?
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  policyName  String?
+  rules       Json?
+  updatedAt   DateTime @updatedAt
+}
+
+model Key {
+  createdAt  DateTime  @default(now())
+  expiryDate DateTime?
+  id         String    @id @default(cuid())
+  keyType    String?
+  keyValue   String?
+  name       String?
+  updatedAt  DateTime  @updatedAt
+}
+
+model Access {
+  accessType  String?
+  createdAt   DateTime @default(now())
+  description String?
+  id          String   @id @default(cuid())
+  policies    Policy[]
+  updatedAt   DateTime @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
